@@ -28,8 +28,9 @@ target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES})
 #------------------------------------------------------------------------------
 
 
-set( SRCS src/main.cpp             \\
-          src/search.h             \\
+set( SRCS src/main.cpp                                        \\
+          src/search.h                                        \\
+          src/page_retriever.cpp                              \\
           src/page_retriever.h )
 
 add_executable( ${PROJECT_NAME} ${SRCS} )
