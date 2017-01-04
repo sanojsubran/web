@@ -35,12 +35,11 @@ public:
 
     bool isFileGood();
 
-    std::stringstream readContent();
+    bool readContent( std::string &filContent );
 
 private:
     std::string m_filename;
 
-    std::ifstream m_reader;
 };
 
 

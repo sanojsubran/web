@@ -29,5 +29,20 @@ bool PageRetriever::pageContent(std::stringstream ss) {
 }
 
 
+bool PageParser::readContent( std::string &fileContent )
+{
+    bool result = false;
+    std::ifstream reader( m_filename );
+    if( reader.good() ) {
+        reader.seekg( 0, std::ios::end );
+        fileContent.resize( static_cast<std::size_t>( reader.tellg() ) );
+        reader.seekg( 0, std::ios::beg );
+        reader.read( &fileContent[0], fileContent.size() );
+        result = ! reader.fail();
+        reader.close();
+    }
+    return result;
 }
 
+
+}
