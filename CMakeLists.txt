@@ -3,7 +3,7 @@ project( webs )
 cmake_minimum_required( VERSION 2.8 )
 
 #TODO //Remove Hardcoded path
-set( PROJECT_LOCATION "E:/personal/code/_web/web" )
+set( PROJECT_LOCATION "/home/xan/all_files/repos/web/" )
 
 #add support for dependency libraries
 
@@ -24,7 +24,7 @@ else()
 endif()
 include_directories( ${Boost_INCLUDE_DIRS} )
 link_directories( ${Boost_LIBRARY_DIRS} )
-target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES})
+#target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES})
 #------------------------------------------------------------------------------
 
 
