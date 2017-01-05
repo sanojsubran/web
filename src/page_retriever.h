@@ -1,5 +1,9 @@
 #pragma once
 
+#include <map>
+#include <vector>
+#include <string>
+
 namespace Webs {
 
 class PageRetriever
@@ -55,7 +59,7 @@ public:
 
     bool populateStopWords( std::string &stopWordsListFilename );
 
-    void generateIndices( std::string &fileContent );
+    bool generateIndices( std::string &fileContent );
 
 private:
     PageParser m_parser;

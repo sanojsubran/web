@@ -1,7 +1,6 @@
-#include <map>
 #include <vector>
-#include <string>
 #include <sstream>
+#include <string>
 #include <fstream>
 #include <iostream>
 
@@ -75,7 +74,7 @@ bool IndexManager::populateStopWords( std::string &stopWordsListFilename )
     std::ifstream reader( stopWordsListFilename );
     if( reader.good() ) {
         while( getline( reader, stopWord) ) {
-            result =  m_stopWords.insert(
+                m_stopWords.insert(
                         std::pair< std::string, std::string >(
                                     stopWord, stopWord ) );
         }
@@ -83,51 +82,70 @@ bool IndexManager::populateStopWords( std::string &stopWordsListFilename )
     return result;
 }
 
-IndexManager::IndexManager( std::string &inputFile )
+bool IndexManager::generateIndices(std::string &data)
 {
-//    std::map< std::string, std::string > words{
-//        std::pair< std::string, std::string >( "the", "the"),
-//        std::pair< std::string, std::string >( "this", "this"),
-//        std::pair< std::string, std::string >( "then", "then"),
-//        std::pair< std::string, std::string >( "that", "that"),
-//        std::pair< std::string, std::string >( "these", "these"),
-//        std::pair< std::string, std::string >( "there", "there") };
-    m_stopWords.insert( words.begin(), words.end() );
-}
-
-
-}
-
-
-
-//parsing logic
-int d( std::string data )
-{
+    bool result = false;
+    unsigned int startIndex = 0x00;
+    bool startTagDetected = false;
+    bool endTagDetected = false;
     bool wordStartDetected = false;
     bool wordEndDetected = false;
     bool spaceDetected = false;
-    std::vector< int> positions;
+    std::vector< unsigned int > positions;
     std::map< std::string, std::vector<int> > dict;
     std::stringstream word;
     std::size_t dataLength = data.length();
-    for( int i = 0; i < dataLength; ++i ) {
+    unsigned int position = 0x00;
+
+    //Find the start of the <body> tag in the html
+    if( std::string::npos == ( startIndex = data.find( "<body>") ) ) {
+        return result;
+    }
+
+    //Start parsing the html and add the words to the dictionary,
+    //if the word is not present in the stop words list
+    for( unsigned int i = startIndex; i < dataLength; ++i ) {
         if( data[ i ] == '>' && data[ i+1 ] == '<' ) {
             continue;
+        } else if( '>' == data[ i ] && data[ i+1 ] != '<' ) {
+            startTagDetected = true;
+            endTagDetected   = false;
+            continue;
+        } else if( '<' == data[ i ] ) {
+            startTagDetected = false;
+            endTagDetected = true;
+            continue;
         }
-        if( '>' == data[ i -1 ] ) {
-            wordStartDetected = true;
-            positions.push_back( i );
-        }
-        if( wordStartDetected ) {
-            if( ' ' != data[ i ] ) {
-                word << data[ i ];
-            } else if( ' ' == data[ i ]  ) {
-                spaceDetected = true;
-                wordEndDetected = true;
+        if( startTagDetected ) {
+            if( ( '>' == data[ i - 1 ] ) || ( ' ' == data[ i - 1 ] ) ) {
+                wordStartDetected = true;
+                position = i;
             }
-            if( wordEndDetected ) {
+            if( wordStartDetected ) {
+                if( ' ' != data[ i ] ) {
+                    word << data[ i ];
+                } else if( ' ' == data[ i ]  ) {
+                    spaceDetected = true;
+                    wordEndDetected = true;
+                }
+                if( wordEndDetected ) {
 
+                }
             }
+
+
         }
+
     }
 }
+
+IndexManager::IndexManager( std::string &inputFile )
+            : m_parser( inputFile )
+{
+
+}
+
+}
+
+
+
