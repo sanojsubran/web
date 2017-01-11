@@ -6,16 +6,24 @@
 
 namespace Webs {
 
+typedef unsigned int ErrorType;
+
 class PageRetriever
 {
 public:
-    PageRetriever();
+    PageRetriever() = delete;
+
+    PageRetriever( const PageRetriever& ) = delete;
+
+    PageRetriever& operator=( const PageRetriever& ) = delete;
+
+    PageRetriever( std::string &url );
 
     ~PageRetriever();
 
     std::string url() const;
 
-    bool pageContent( std::stringstream ss );
+    ErrorType pageContent(  );
 
 private:
     std::string m_url;
@@ -23,29 +31,17 @@ private:
     bool m_queryStatus;
 
 };
+/*
 
-
-class PageParser
+struct PageParser
 {
 public:
-    PageParser( std::string &filename ) : m_filename( filename ) {
-
-    }
-
-    ~PageParser() {}
 
     bool isFileGood();
 
     bool readContent( std::string &filContent, std::string &filename );
 
     bool writeContent( std::string &content, std::string &filename );
-
-    std::string& filename();
-
-
-
-private:
-    std::string m_filename;
 
 };
 
@@ -68,5 +64,5 @@ private:
 
     std::map< std::string, std::vector< int > > m_wordDictionary;
 };
-
+*/
 }

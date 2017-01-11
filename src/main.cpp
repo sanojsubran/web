@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include "page_retriever.h"
+
 
 int main( int argc, char* argv[] )
 {
@@ -16,6 +18,9 @@ int main( int argc, char* argv[] )
         std::cout << "App name: " << appname << std::endl;
         std::cout << "Url: " << url << std::endl;
         std::cout << "Pattern: " << pattern << std::endl;
+
+        Webs::PageRetriever obj( url );
+        obj.pageContent();
     }
     return 0;
 }

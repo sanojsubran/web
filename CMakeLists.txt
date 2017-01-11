@@ -14,26 +14,30 @@ set ( BOOST_INCLUDEDIR "${PROJECT_LOCATION}/dependency/Boost/include" )
 set ( BOOST_LIBRARYDIR "${PROJECT_LOCATION}/dependency/Boost/lib" )
 set ( Boost_NO_SYSTEM_PATHS "ON" )
 set ( Boost_USE_STATIC_LIBS "ON" )
-set ( Boost_USE_MULTITHREADED "ON" )
+set ( Boost_USE_MULTITHREADED "OFF" )
 
-find_package( Boost )
+find_package( Boost REQUIRED COMPONENTS system filesystem )
+
 if( Boost_FOUND )
     message( "Boost found" )
+    message( ${Boost_INCLUDE_DIRS} )
+    message( ${Boost_LIBRARY_DIRS} )
 else()
     message( "Boost not found" )
 endif()
 include_directories( ${Boost_INCLUDE_DIRS} )
 link_directories( ${Boost_LIBRARY_DIRS} )
-#target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES})
 #------------------------------------------------------------------------------
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread" )
 
 set( SRCS src/main.cpp                                        \\
-          src/search.h                                        \\
           src/page_retriever.cpp                              \\
-          src/page_retriever.h                                \\
-          src/webserver.h                                     \\
-          src/webserver.cpp
+          src/page_retriever.h                                #\\
+          #src/search.h                                        \\
+          #src/webserver.h                                     \\
+          #src/webserver.cpp
           )
 
 add_executable( ${PROJECT_NAME} ${SRCS} )
+target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES} )
