@@ -31,6 +31,9 @@ link_directories( ${Boost_LIBRARY_DIRS} )
 set( SRCS src/main.cpp                                        \\
           src/search.h                                        \\
           src/page_retriever.cpp                              \\
-          src/page_retriever.h )
+          src/page_retriever.h                                \\
+          src/webserver.h                                     \\
+          src/webserver.cpp
+          )
 
 add_executable( ${PROJECT_NAME} ${SRCS} )
