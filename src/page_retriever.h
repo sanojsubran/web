@@ -23,7 +23,7 @@ public:
 
     std::string url() const;
 
-    ErrorType pageContent(  );
+    ErrorType pageContent( std::string content );
 
 private:
     std::string m_url;
