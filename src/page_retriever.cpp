@@ -25,7 +25,7 @@ std::string PageRetriever::url() const {
 }
 
 
-ErrorType PageRetriever::pageContent( std::string& content ) {
+ErrorType PageRetriever::pageContent( std::string &content ) {
     try {
         std::string::size_type pos =  m_url.find_first_of("/");
         std::string mainDomian;
@@ -96,6 +96,8 @@ ErrorType PageRetriever::pageContent( std::string& content ) {
 
         if( response.size() > 0 ) {
             std::cout << &response;
+            std::istream finalData( &response );
+            finalData >> content;
         }
 
         while( true ) {
@@ -104,8 +106,10 @@ ErrorType PageRetriever::pageContent( std::string& content ) {
                                             boost::asio::transfer_at_least( 1 ),
                                             error );
             if( !error ) {
-                if( n )
+                if( n ) {
                     std::cout << &response;
+                    //content = repsonse;
+                }
             }
             if( error == boost::asio::error::eof )
                 break;
