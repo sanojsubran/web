@@ -93,16 +93,19 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
 
         boost::asio::read_until( connSocket, response, "\r\n\r\n" );
         std::string header;
-        while( getline( resp_stream, header ) && header != "\r" )
-            std::cerr << header << "\n";
+        while( getline( resp_stream, header ) && header != "\r" ) {
+            //std::cerr << header << "\n";
+        }
 
         std::cerr << "\n";
         std::cerr << "Writing content data\n";
-
         if( response.size() > 0 ) {
-            std::cout << &response;
-            std::istream finalData( &response );
-            finalData >> content;
+            //std::cout << &response;
+            content.clear();
+            std::istream final( &response );
+            std::string temp;
+            while ( std::getline( final, temp ))
+                content += temp;
         }
 
         while( true ) {
@@ -112,8 +115,10 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
                                             error );
             if( !error ) {
                 if( n ) {
-                    std::cout << &response;
-                    //content = repsonse;
+                    std::istream final( &response );
+                    std::string temp;
+                    while ( std::getline( final, temp ))
+                        content += temp;
                 }
             }
             if( error == boost::asio::error::eof )
@@ -121,15 +126,12 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
             if( error )
                 throw boost::system::system_error( error );
         }
-
     }
 
     catch( std::exception &excep ) {
         std::cerr << "Exception: " << excep.what() << "\n";
         return 1;
     }
-
-
     return 0;
 }
 
