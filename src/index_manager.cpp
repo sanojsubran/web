@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <memory>
+#include <iostream>
 
 #include "index_manager.h"
 
@@ -50,7 +51,7 @@ bool IndexManager::populateStopWords( std::string &stopWordsListFilename )
     return result;
 }
 
-bool IndexManager::generateIndices(std::string &data)
+bool IndexManager::generateIndices( /*std::string &data*/ )
 {
     bool result = false;
     unsigned int startIndex = 0x00;
@@ -62,11 +63,12 @@ bool IndexManager::generateIndices(std::string &data)
     std::vector< unsigned int > positions;
     std::map< std::string, std::vector<int> > dict;
     std::stringstream word;
-    std::size_t dataLength = data.length();
     unsigned int position = 0x00;
     std::size_t startTagPos = 0;
     std::size_t endTagPos = 0;
-
+    std::string data;
+    m_pageRetriever.pageContent( data );
+    std::size_t dataLength = data.length();
     //Find the start of the <body> tag in the html
     if( std::string::npos == ( startIndex = data.find( "<body>") ) ) {
         return result;
@@ -77,19 +79,23 @@ bool IndexManager::generateIndices(std::string &data)
     for( std::size_t i = startIndex + 6; i < data.length(); ) {
         startTagPos = data.find( ">", i );
         endTagPos = 0;
+        i = startTagPos;
         if( startTagPos != std::string::npos &&
                 data[ startTagPos + 1 ] == '<' ) {
             i = i + 2;
             continue;
         } else if( startTagPos != std::string::npos &&
                               data[ startTagPos + 1 ] != '<' ) {
-            endTagPos = data.find( "<", startTagPos );
-            std::string textData = data.substr( startTagPos,
-                                                ( endTagPos - startTagPos) );
+            endTagPos = data.find( "<", i );
+            std::string textData = data.substr( i+1,
+                                                ( endTagPos - startTagPos -1) );
             std::stringstream textStream( textData );
             std::string word;
             std::size_t wordIndex = startTagPos;
-            while( std::getline( textStream, word ) ) {
+            std::cout << textData << std::endl;
+            std::cout << "======================================" << std::endl;
+            /*
+            while( std::getline( textStream, word, ' ' ) ) {
                 if( m_stopWords.end() == m_stopWords.find( word ) ) {
                     std::vector< int > wordList;
                     wordIndex = textData.find( textData, wordIndex );
@@ -110,8 +116,9 @@ bool IndexManager::generateIndices(std::string &data)
                     wordIndex += word.length();
                 }
             }
+            */
         }
-        i = i + endTagPos;
+        i = endTagPos;
     }
 }
 
@@ -130,6 +137,16 @@ bool IndexManager::getWordIndices( std::string &word,
 void IndexManager::setUrl(const std::string &url)
 {
     m_pageRetriever.setUrl( url );
+}
+
+std::set<std::string> IndexManager::stopWordList()
+{
+    return m_stopWords;
+}
+
+std::map<std::string, std::vector<int> > IndexManager::wordDictionary()
+{
+    return m_wordDictionary;
 }
 
 

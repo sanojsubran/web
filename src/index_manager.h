@@ -32,12 +32,16 @@ public:
 
     bool populateStopWords( std::string &stopWordsListFilename );
 
-    bool generateIndices( std::string &fileContent );
+    bool generateIndices( /*std::string &fileContent*/ );
 
     bool getWordIndices( std::string &word,
                          std::vector< int> &wordPositions );
 
     void setUrl( const std::string &url );
+
+    std::set< std::string > stopWordList();
+
+    std::map< std::string, std::vector< int > > wordDictionary();
 
     static IndexManager* instance();
 
