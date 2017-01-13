@@ -92,18 +92,23 @@ bool IndexManager::generateIndices( /*std::string &data*/ )
             std::stringstream textStream( textData );
             std::string word;
             std::size_t wordIndex = startTagPos;
-            std::cout << textData << std::endl;
-            std::cout << "======================================" << std::endl;
-            /*
+//            std::cout << textData << std::endl;
+//            std::cout << "======================================" << std::endl;
+
             while( std::getline( textStream, word, ' ' ) ) {
+                if( '.' == word[ word.length() -1 ] ||
+                    ',' == word[ word.length() -1 ] ) {
+                    word = word.substr( 0, word.length() -1  );
+                }
                 if( m_stopWords.end() == m_stopWords.find( word ) ) {
                     std::vector< int > wordList;
-                    wordIndex = textData.find( textData, wordIndex );
+                    wordIndex += textData.find( word, 0 );
                     if( m_wordDictionary.end()
                             != m_wordDictionary.find( word ) ) {
                         auto iter = m_wordDictionary.find( word );
                         wordList = iter->second;
                         wordList.push_back( wordIndex );
+                        m_wordDictionary.erase( iter );
                         m_wordDictionary.insert(
                             std::pair< std::string, std::vector< int> >( word,
                                                                wordList ) );
@@ -116,7 +121,7 @@ bool IndexManager::generateIndices( /*std::string &data*/ )
                     wordIndex += word.length();
                 }
             }
-            */
+
         }
         i = endTagPos;
     }

@@ -43,7 +43,6 @@ std::string ContextProvider::getWordContext( std::string &word,
     if( endTagPos != std::string::npos ) {
         contextData = contextString.substr( startTagPos,
                                             ( endTagPos - startTagPos ) );
-
     }
     return contextData;
 }
