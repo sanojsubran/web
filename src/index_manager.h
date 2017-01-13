@@ -1,6 +1,7 @@
 #pragma once
 
 #include <set>
+#include <memory>
 
 #include "page_retriever.h"
 
@@ -20,8 +21,12 @@ public:
 
 class IndexManager
 {
-public:
+private:
     IndexManager( std::string &url );
+
+    IndexManager() = delete;
+public:
+    //typedef std::shared_ptr< IndexManager > Ptr;
 
     ~IndexManager() {}
 
@@ -32,12 +37,22 @@ public:
     bool getWordIndices( std::string &word,
                          std::vector< int> &wordPositions );
 
+    void setUrl( const std::string &url );
+
+    static IndexManager* instance();
+
+    static void createInstance( std::string &url );
+
 private:
+    static IndexManager *m_instance;
+
     PageRetriever m_pageRetriever;
 
     std::set< std::string > m_stopWords;
 
     std::map< std::string, std::vector< int > > m_wordDictionary;
 };
+
+#define INDEX_MGR() Webs::IndexManager::instance()
 
 }

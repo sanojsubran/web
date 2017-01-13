@@ -1,10 +1,13 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <memory>
 
 #include "index_manager.h"
 
 namespace Webs {
+
+IndexManager* IndexManager::m_instance = nullptr;
 
 bool PageParser::readContent( std::string &fileContent , std::string &filename )
 {
@@ -124,11 +127,32 @@ bool IndexManager::getWordIndices( std::string &word,
     return result;
 }
 
+void IndexManager::setUrl(const std::string &url)
+{
+    m_pageRetriever.setUrl( url );
+}
+
+
 IndexManager::IndexManager( std::string &url )
             : m_pageRetriever( url )
 {
     m_stopWords.clear();
     m_wordDictionary.clear();
 }
+
+IndexManager* IndexManager::instance()
+{
+    return m_instance;
+}
+
+
+void IndexManager::createInstance( std::string &url )
+{
+    if( nullptr == m_instance ) {
+        m_instance  = new IndexManager( url );
+    }
+    m_instance->setUrl( url );
+}
+
 
 }

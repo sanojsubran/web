@@ -24,6 +24,11 @@ std::string PageRetriever::url() const {
     return m_url;
 }
 
+void PageRetriever::setUrl(const std::string &url)
+{
+    m_url = url;
+}
+
 
 ErrorType PageRetriever::pageContent( std::string &content ) {
     try {

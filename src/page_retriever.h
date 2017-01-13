@@ -23,6 +23,8 @@ public:
 
     std::string url() const;
 
+    void setUrl( const std::string &url );
+
     ErrorType pageContent( std::string &content );
 
 private:
