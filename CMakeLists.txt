@@ -32,8 +32,10 @@ link_directories( ${Boost_LIBRARY_DIRS} )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread" )
 
 set( SRCS src/main.cpp                                        \\
+          src/page_retriever.h                                \\
           src/page_retriever.cpp                              \\
-          src/page_retriever.h                                #\\
+          src/index_manager.h                                 \\
+          src/index_manager.cpp                               \\
           #src/search.h                                        \\
           #src/webserver.h                                     \\
           #src/webserver.cpp
