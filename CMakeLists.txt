@@ -36,6 +36,8 @@ set( SRCS src/main.cpp                                        \\
           src/page_retriever.cpp                              \\
           src/index_manager.h                                 \\
           src/index_manager.cpp                               \\
+          src/context_provider.h                              \\
+          src/context_provider.cpp                            #\\
           #src/search.h                                        \\
           #src/webserver.h                                     \\
           #src/webserver.cpp
