@@ -39,6 +39,8 @@ public:
 
     void setUrl( const std::string &url );
 
+    std::string htmlData();
+
     std::set< std::string > stopWordList();
 
     std::map< std::string, std::vector< int > > wordDictionary();
@@ -49,6 +51,8 @@ public:
 
 private:
     static IndexManager *m_instance;
+
+    std::string m_htmlData;
 
     PageRetriever m_pageRetriever;
 

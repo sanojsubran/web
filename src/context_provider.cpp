@@ -1,3 +1,6 @@
+#include <vector>
+#include <sstream>
+
 #include "index_manager.h"
 #include "context_provider.h"
 
@@ -20,30 +23,41 @@ ContextProvider::~ContextProvider()
 std::string ContextProvider::getWordContext( std::string &word,
                                              std::size_t pos)
 {
-    std::size_t localBoundary = ( pos > 100 )? 100 : 25;
+    std::size_t localBoundary = ( pos > 30 )? 30 : 15;
     std::string contextData = "";
     if( m_websiteContent.empty() || word.empty() ) {
         return contextData;
     }
     std::string contextString = m_websiteContent.substr( pos - localBoundary,
-                                                  pos + localBoundary );
-    std::size_t mid = contextString.length() / 2;
-    std::size_t startTagPos = 0;
-    while( mid > 0 ) {
-        if( '>' == contextString[ mid ]  ) {
-            startTagPos = mid;
-            break;
-        }
-        --mid;
+                                                  2 * localBoundary );
+
+    std::stringstream contextStream;
+    contextStream.str( contextString );
+    std::vector< std::string > wordList;
+    std::string item;
+    while( std::getline( contextStream, item, ' ' ) ) {
+        wordList.push_back( item );
     }
-    if( !mid ) {
-        return contextData;
+    std::size_t listSize = wordList.size();
+    for( unsigned int i = 1; i < listSize - 1; ++i ) {
+        contextData += wordList.at( i ) + " ";
     }
-    std::size_t endTagPos = contextString.find( '<', startTagPos );
-    if( endTagPos != std::string::npos ) {
-        contextData = contextString.substr( startTagPos,
-                                            ( endTagPos - startTagPos ) );
-    }
+//    std::size_t mid = contextString.length() / 2;
+//    std::size_t startTagPos = 0;
+//    while( mid > 0 ) {
+//        if( '>' == contextString[ mid ]  ) {
+//            startTagPos = mid;
+//            break;
+//        }
+//        --mid;
+//    }
+//    if( !mid ) {
+//        std::size_t endTagPos = contextString.find( '<', startTagPos );
+//        if( endTagPos != std::string::npos ) {
+//            contextData = contextString.substr( startTagPos,
+//                                                ( endTagPos - startTagPos ) );
+//        }
+//    }
     return contextData;
 }
 
