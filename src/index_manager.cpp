@@ -45,7 +45,8 @@ bool IndexManager::populateStopWords( std::string &stopWordsListFilename )
     std::string stopWord;
     std::ifstream reader( stopWordsListFilename );
     if( reader.good() ) {
-        while( getline( reader, stopWord) ) {
+        result = true;
+        while( getline( reader, stopWord, ' ' ) ) {
                 m_stopWords.insert( stopWord );
         }
     }
@@ -56,22 +57,14 @@ bool IndexManager::generateIndices( )
 {
     bool result = false;
     unsigned int startIndex = 0x00;
-    bool startTagDetected = false;
-    bool endTagDetected = false;
-    bool wordStartDetected = false;
-    bool wordEndDetected = false;
-    bool spaceDetected = false;
-    std::vector< unsigned int > positions;
-    std::map< std::string, std::vector<int> > dict;
-    std::stringstream word;
-    unsigned int position = 0x00;
     std::size_t startTagPos = 0;
     std::size_t endTagPos = 0;
     m_htmlData.clear();
-    m_pageRetriever.pageContent( m_htmlData );
-    std::size_t dataLength = m_htmlData.length();
+    if ( 1 == m_pageRetriever.pageContent( m_htmlData ) ) {
+        return result;
+    }
     std::string htmlData = m_htmlData;
-    if( 0 == dataLength )
+    if( 0 == m_htmlData.length() )
         return result;
     //Find the start of the <body> tag in the html
     if( std::string::npos == ( startIndex = htmlData.find( "<body>") ) ) {
@@ -104,20 +97,17 @@ bool IndexManager::generateIndices( )
 //            std::cout << "======================================" << std::endl;
            std::size_t textStreamCursor = 0;
             while( std::getline( textStream, word, ' ' ) ) {
-                if( '.' == word[ word.length() -1 ] ||
-                    ',' == word[ word.length() -1 ] ) {
-                    word = word.substr( 0, word.length() -1  );
-                }
                 if( m_stopWords.end() == m_stopWords.find( word ) ) {
+                    result = true;
                     std::vector< int > wordList;
                     wordIndex = startTagPos + textData.find( word,
-                                                             textStreamCursor );
+                                                         textStreamCursor );
                     if( m_wordDictionary.end()
                             != m_wordDictionary.find( word ) ) {
                         auto iter = m_wordDictionary.find( word );
                         wordList = iter->second;
-                        wordList.push_back( wordIndex );
                         m_wordDictionary.erase( iter );
+                        wordList.push_back( wordIndex );
                         m_wordDictionary.insert(
                             std::pair< std::string, std::vector< int> >( word,
                                                                wordList ) );
@@ -134,6 +124,7 @@ bool IndexManager::generateIndices( )
         }
         i = endTagPos;
     }
+    return result;
 }
 
 bool IndexManager::getWordIndices( std::string &word,

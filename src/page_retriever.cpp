@@ -57,15 +57,11 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
             connSocket.close();
             endPoint = *iter++;
             connSocket.connect( endPoint, error );
-            //std::cout << endPoint << std::endl;
         }
         if( error )
             throw boost::system::system_error( error );
-        //Till now socket is connected
         boost::asio::streambuf request;
         std::ostream req_stream( &request );
-
-
         req_stream << "GET " << page << " HTTP/1.0\r\n";
         req_stream << "Host: " << mainDomian << "\r\n";
         req_stream << "Accept: */*\r\n";
@@ -73,7 +69,6 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
         boost::asio::write( connSocket, request );
         boost::asio::streambuf response;
         boost::asio::read_until( connSocket, response, "\r\n" );
-
         std::istream resp_stream( &response );
         std::string http_ver;
         resp_stream >> http_ver;
@@ -90,17 +85,14 @@ ErrorType PageRetriever::pageContent( std::string &content ) {
                       << status_code << "\n";
             return 1;
         }
-
         boost::asio::read_until( connSocket, response, "\r\n\r\n" );
         std::string header;
-        while( getline( resp_stream, header ) && header != "\r" ) {
-            //std::cerr << header << "\n";
-        }
-
-        std::cerr << "\n";
-        std::cerr << "Writing content data\n";
+//        while( getline( resp_stream, header ) && header != "\r" ) {
+//            //std::cerr << header << "\n";
+//        }
+//        std::cerr << "\n";
+//        std::cerr << "Writing content data\n";
         if( response.size() > 0 ) {
-            //std::cout << &response;
             content.clear();
             std::istream final( &response );
             std::string temp;

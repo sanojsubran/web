@@ -26,13 +26,11 @@ private:
 
     IndexManager() = delete;
 public:
-    //typedef std::shared_ptr< IndexManager > Ptr;
-
     ~IndexManager() {}
 
     bool populateStopWords( std::string &stopWordsListFilename );
 
-    bool generateIndices( /*std::string &fileContent*/ );
+    bool generateIndices();
 
     bool getWordIndices( std::string &word,
                          std::vector< int> &wordPositions );
